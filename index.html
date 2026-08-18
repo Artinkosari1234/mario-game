@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mario Game Scene</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="game-scene" aria-label="Mario game scene">
+      <div class="sky"></div>
+      <div class="cloud cloud-one" aria-hidden="true"></div>
+      <div class="cloud cloud-two" aria-hidden="true"></div>
+      <div class="cloud cloud-three" aria-hidden="true"></div>
+      <div class="score" aria-live="polite">Coins: <span id="score">0</span></div>
+      <button id="shop-button" type="button">SHOP</button>
+      <div class="shop-panel" hidden>
+        <h2>Hero Shop</h2>
+        <div class="shop-item" data-color="#3478db" data-price="5"><b>Blue Bolt</b><small>Common · 5 coins</small><button>Buy</button></div>
+        <div class="shop-item" data-color="#19d3d1" data-price="10"><b>Cyan Wave</b><small>Common · 10 coins</small><button>Buy</button></div>
+        <div class="shop-item" data-color="#f97316" data-price="20"><b>Orange Blaze</b><small>Rare · 20 coins</small><button>Buy</button></div>
+        <div class="shop-item" data-color="#35a853" data-price="30"><b>Green Grove</b><small>Rare · 30 coins</small><button>Buy</button></div>
+        <div class="shop-item" data-color="#ec4899" data-price="45"><b>Pink Pulse</b><small>Epic · 45 coins</small><button>Buy</button></div>
+        <div class="shop-item" data-color="#737373" data-price="60"><b>Gray Steel</b><small>Epic · 60 coins</small><button>Buy</button></div>
+        <div class="shop-item" data-color="#facc15" data-price="75"><b>Yellow Star</b><small>Legendary · 75 coins</small><button>Buy</button></div>
+        <div class="shop-item" data-color="#171717" data-price="100"><b>Black Void</b><small>Legendary · 100 coins</small><button>Buy</button></div>
+      </div>
+      <div class="world">
+      <div class="platform platform-one" aria-label="Floating platform"></div>
+      <div class="platform platform-two" aria-label="Floating platform"></div>
+      <div class="platform platform-three" aria-label="Floating platform"></div>
+      <div class="platform platform-four" aria-label="Floating platform"></div>
+      <div class="platform platform-five" aria-label="Floating platform"></div>
+      <div class="hole hole-one" aria-label="Hole"></div>
+      <div class="hole hole-two" aria-label="Hole"></div>
+      <div class="hole hole-three" aria-label="Hole"></div>
+      <div class="platform platform-six" aria-label="Floating platform"></div>
+      <div class="platform platform-seven" aria-label="Floating platform"></div>
+      <div class="platform platform-eight" aria-label="Floating platform"></div>
+      <div class="coin coin-one" aria-label="Coin"></div>
+      <div class="coin coin-two" aria-label="Coin"></div>
+      <div class="coin coin-three" aria-label="Coin"></div>
+      <div class="coin coin-four" aria-label="Coin"></div>
+      <div class="coin coin-five" aria-label="Coin"></div>
+      <div class="flag" aria-label="Finish flag">
+        <div class="flag-pole"></div>
+        <div class="flag-banner">★</div>
+      </div>
+      <div class="ground" aria-label="Ground"></div>
+      <div class="hero" aria-label="Hero"></div>
+      </div>
+    </main>
+    <div class="win-screen" hidden>
+      <div class="win-card">
+        <h1>YOU WIN!</h1>
+        <button id="next-level" type="button">Next Level</button>
+        <button id="play-again" type="button">Play Again</button>
+      </div>
+    </div>
+    <script src="game.js"></script>
+  </body>
+</html>
