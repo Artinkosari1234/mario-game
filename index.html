@@ -13,7 +13,17 @@
       <div class="cloud cloud-two" aria-hidden="true"></div>
       <div class="cloud cloud-three" aria-hidden="true"></div>
       <div class="score" aria-live="polite">Coins: <span id="score">0</span></div>
+      <div id="level-indicator" class="level-indicator" aria-live="polite">Level 1</div>
       <button id="shop-button" type="button">SHOP</button>
+      <button id="settings-button" type="button" aria-label="Open settings" aria-expanded="false" aria-controls="settings-panel">⚙</button>
+      <div id="settings-panel" class="settings-panel" hidden>
+        <h2>Settings</h2>
+        <label class="setting-row">
+          <input id="touch-toggle" type="checkbox" />
+          <span>Arrow controls</span>
+        </label>
+        <small>Show on-screen arrows for smartphone play.</small>
+      </div>
       <div class="shop-panel" hidden>
         <h2>Hero Shop</h2>
         <div class="shop-item" data-color="#3478db" data-price="5"><b>Blue Bolt</b><small>Common · 5 coins</small><button>Buy</button></div>
@@ -37,6 +47,7 @@
       <div class="platform platform-six" aria-label="Floating platform"></div>
       <div class="platform platform-seven" aria-label="Floating platform"></div>
       <div class="platform platform-eight" aria-label="Floating platform"></div>
+      <div class="platform moving-platform" aria-label="Moving platform"></div>
       <div class="coin coin-one" aria-label="Coin"></div>
       <div class="coin coin-two" aria-label="Coin"></div>
       <div class="coin coin-three" aria-label="Coin"></div>
@@ -47,7 +58,15 @@
         <div class="flag-banner">★</div>
       </div>
       <div class="ground" aria-label="Ground"></div>
+      <div class="ground ground-left" aria-label="Left ground"></div>
       <div class="hero" aria-label="Hero"></div>
+      </div>
+      <div class="touch-controls" aria-label="Touch controls">
+        <button class="touch-button" type="button" data-key="ArrowLeft" aria-label="Move left">←</button>
+        <button class="touch-button touch-diagonal" type="button" data-key="ArrowLeft" data-jump="true" aria-label="Move left and jump">↖</button>
+        <button class="touch-button touch-jump" type="button" data-key="Space" aria-label="Jump">↑</button>
+        <button class="touch-button touch-diagonal" type="button" data-key="ArrowRight" data-jump="true" aria-label="Move right and jump">↗</button>
+        <button class="touch-button" type="button" data-key="ArrowRight" aria-label="Move right">→</button>
       </div>
     </main>
     <div class="win-screen" hidden>

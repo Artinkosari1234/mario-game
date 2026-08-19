@@ -95,6 +95,20 @@ body {
   text-shadow: 2px 2px #543426;
 }
 
+.level-indicator {
+  position: absolute;
+  z-index: 5;
+  top: 20px;
+  left: 155px;
+  padding: 8px 14px;
+  border: 3px solid #6b3d20;
+  color: #fff7d6;
+  background: rgba(73, 47, 35, 0.85);
+  box-shadow: 3px 3px 0 rgba(39, 25, 19, 0.35);
+  font: 700 20px/1 Arial, sans-serif;
+  text-shadow: 2px 2px #543426;
+}
+
 #shop-button {
   position: absolute;
   top: 64px;
@@ -107,6 +121,96 @@ body {
   background: #7c32b5;
   cursor: pointer;
   font-weight: 800;
+}
+
+#settings-button {
+  position: absolute;
+  top: 64px;
+  left: 111px;
+  z-index: 6;
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  padding: 0;
+  border: 2px solid rgba(255, 247, 214, 0.9);
+  border-radius: 50%;
+  color: #fff7d6;
+  background: rgba(53, 120, 219, 0.92);
+  box-shadow: 0 3px 0 rgba(39, 25, 19, 0.35);
+  cursor: pointer;
+  font: 700 22px/1 Arial, sans-serif;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+#settings-button:hover,
+#settings-button:focus-visible {
+  background: #245cae;
+  transform: translateY(-1px);
+}
+
+#settings-button:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+.touch-controls {
+  position: absolute;
+  right: 22px;
+  bottom: max(22px, env(safe-area-inset-bottom));
+  z-index: 8;
+  display: none;
+  gap: 10px;
+  align-items: end;
+}
+
+.game-scene.touch-enabled .touch-controls { display: flex; }
+
+.touch-button {
+  width: 62px;
+  height: 62px;
+  border: 4px solid #6b3d20;
+  border-radius: 0;
+  color: #fff7d6;
+  background: rgba(73, 47, 35, 0.88);
+  box-shadow: 5px 5px 0 rgba(39, 25, 19, 0.5);
+  cursor: pointer;
+  font: 900 34px/1 "Courier New", monospace;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.touch-button.pressed,
+.touch-button:active {
+  background: #7c32b5;
+  transform: translate(3px, 3px);
+  box-shadow: 2px 2px 0 rgba(39, 25, 19, 0.5);
+}
+
+.settings-panel {
+  position: absolute;
+  top: 104px;
+  left: 105px;
+  z-index: 7;
+  width: 235px;
+  padding: 13px;
+  border: 4px solid #6b3d20;
+  border-radius: 8px;
+  color: #35135c;
+  background: #fff1b8;
+  font-family: Arial, sans-serif;
+}
+
+.settings-panel[hidden] { display: none; }
+.settings-panel h2 { margin: 0 0 10px; font-size: 20px; }
+.setting-row { display: flex; align-items: center; gap: 9px; font-weight: 700; }
+.setting-row input { width: 19px; height: 19px; accent-color: #7c32b5; }
+.settings-panel small { display: block; margin-top: 8px; line-height: 1.3; }
+
+@media (pointer: coarse), (max-width: 700px) {
+  #settings-button { left: 24px; top: 104px; }
+  .settings-panel { top: 144px; left: 24px; }
 }
 
 .shop-panel {
@@ -455,19 +559,36 @@ body {
   height: 18vh;
   min-height: 72px;
   z-index: 1;
-  border-top: 8px solid #477b2c;
+  border: 3px solid #6b3d20;
+  border-top: 8px solid #6b3d20;
   background:
     repeating-linear-gradient(90deg, transparent 0 58px, rgba(70, 38, 24, 0.3) 59px 62px, transparent 63px 120px),
     linear-gradient(#8a5631 0 18%, #694127 19% 62%, #4d3023 63% 100%);
   box-shadow: inset 0 5px 0 #77ad3d;
 }
 
+.ground-left { display: none; }
+
+.game-scene.level-seventeen .ground:not(.ground-left) {
+  left: 65%;
+  width: 35%;
+}
+
+.game-scene.level-seventeen .ground-left {
+  right: auto;
+  left: 0;
+  display: block;
+  width: 30%;
+}
+
 .ground::before {
   position: absolute;
-  top: -8px;
-  right: 0;
-  left: 0;
-  height: 7px;
+  top: -11px;
+  right: -3px;
+  left: -3px;
+  height: 11px;
+  border: 3px solid #477b2c;
+  border-bottom: 0;
   background: repeating-linear-gradient(135deg, #77ad3d 0 8px, #5d922f 8px 13px);
   content: "";
 }
@@ -555,8 +676,9 @@ body {
   background: transparent;
 }
 
-.game-scene.level-two .hole { display: block; }
-.game-scene.level-two .hole { background: #000; }
+/* Holes remain part of the scenery markup for future layouts, but level 2 is
+   a friendly ground-based level. */
+.hole { display: none; }
 .hole-one { left: 28%; width: 90px; }
 .hole-two { left: 57%; width: 115px; }
 .hole-three { right: 20%; width: 75px; }
@@ -567,15 +689,358 @@ body {
 .game-scene.level-three .platform-six { display: block; bottom: 30vh; left: 25%; width: 95px; }
 .game-scene.level-three .platform-seven { display: block; bottom: 68vh; left: 46%; width: 105px; }
 .game-scene.level-three .platform-eight { display: block; bottom: 32vh; right: 12%; width: 85px; }
-.game-scene.level-four .ground { display: none; }
-.game-scene.level-four .platform-one { bottom: 20vh; left: 42%; }
-.game-scene.level-four .platform-two { bottom: 38vh; left: 12%; }
-.game-scene.level-four .platform-three { bottom: 55vh; left: 62%; }
-.game-scene.level-four .platform-four { display: block; bottom: 72vh; left: 30%; }
-.game-scene.level-four .platform-five { display: block; bottom: 30vh; right: 5%; }
-.game-scene.level-four .platform-six { display: block; bottom: 48vh; left: 42%; }
-.game-scene.level-four .platform-seven { display: block; bottom: 68vh; left: 72%; }
-.game-scene.level-four .platform-eight { display: block; bottom: 42vh; left: 78%; }
+.game-scene.level-four .platform-one { bottom: 28vh; left: 8%; }
+.game-scene.level-four .platform-two { bottom: 38vh; left: 31%; }
+.game-scene.level-four .platform-three { bottom: 30vh; right: 8%; }
+.game-scene.level-four .platform-four { display: block; bottom: 46vh; left: 53%; width: 110px; }
+.game-scene.level-four .platform-five { display: block; bottom: 25vh; right: 28%; width: 100px; }
+.game-scene.level-four .platform-six { display: block; bottom: 34vh; left: 18%; width: 95px; }
+.game-scene.level-four .platform-seven { display: block; bottom: 44vh; right: 10%; width: 100px; }
+.game-scene.level-four .platform-eight { display: block; bottom: 27vh; left: 65%; width: 90px; }
+.game-scene.level-four .coin-one { bottom: 23vh; left: 17%; }
+.game-scene.level-four .coin-two { bottom: 33vh; left: 40%; }
+.game-scene.level-four .coin-three { bottom: 41vh; left: 59%; }
+.game-scene.level-four .coin-four { bottom: 27vh; right: 34%; }
+.game-scene.level-four .coin-five { bottom: 23vh; right: 12%; }
+
+/* Levels 5–10: each route uses the ground and platforms, so every layout has
+   a safe path from the start to the flag. */
+.game-scene.level-five .platform-one { bottom: 25vh; left: 5%; }
+.game-scene.level-five .platform-two { bottom: 42vh; left: 28%; }
+.game-scene.level-five .platform-three { bottom: 46vh; left: 54%; }
+.game-scene.level-five .platform-four { display: block; bottom: 35vh; right: 5%; width: 120px; }
+.game-scene.level-five .coin-one { bottom: 31vh; left: 12%; }
+.game-scene.level-five .coin-two { bottom: 48vh; left: 36%; }
+.game-scene.level-five .coin-three { bottom: 52vh; left: 62%; }
+.game-scene.level-five .coin-four { bottom: 41vh; right: 12%; }
+.game-scene.level-five .coin-five { bottom: 22vh; right: 5%; }
+
+.game-scene.level-six .platform-one { bottom: 45vh; left: 8%; }
+.game-scene.level-six .platform-two { bottom: 28vh; left: 35%; }
+.game-scene.level-six .platform-three { bottom: 50vh; right: 8%; }
+.game-scene.level-six .platform-four { display: block; bottom: 48vh; left: 48%; width: 110px; }
+.game-scene.level-six .platform-five { display: block; bottom: 36vh; right: 30%; width: 100px; }
+.game-scene.level-six .coin-one { bottom: 51vh; left: 14%; }
+.game-scene.level-six .coin-two { bottom: 34vh; left: 43%; }
+.game-scene.level-six .coin-three { bottom: 56vh; left: 53%; }
+.game-scene.level-six .coin-four { bottom: 56vh; right: 15%; }
+.game-scene.level-six .coin-five { bottom: 42vh; right: 34%; }
+
+.game-scene.level-seven .platform-one { bottom: 32vh; left: 4%; }
+.game-scene.level-seven .platform-two { bottom: 46vh; left: 24%; }
+.game-scene.level-seven .platform-three { bottom: 36vh; left: 55%; }
+.game-scene.level-seven .platform-four { display: block; bottom: 48vh; right: 7%; width: 125px; }
+.game-scene.level-seven .platform-five { display: block; bottom: 48vh; left: 42%; width: 90px; }
+.game-scene.level-seven .coin-one { bottom: 38vh; left: 11%; }
+.game-scene.level-seven .coin-two { bottom: 54vh; left: 31%; }
+.game-scene.level-seven .coin-three { bottom: 56vh; left: 48%; }
+.game-scene.level-seven .coin-four { bottom: 42vh; left: 67%; }
+.game-scene.level-seven .coin-five { bottom: 56vh; right: 12%; }
+
+.game-scene.level-eight .platform-one { bottom: 52vh; left: 10%; }
+.game-scene.level-eight .platform-two { bottom: 34vh; left: 42%; }
+.game-scene.level-eight .platform-three { bottom: 46vh; right: 8%; }
+.game-scene.level-eight .platform-six { display: block; bottom: 25vh; left: 20%; width: 95px; }
+.game-scene.level-eight .platform-seven { display: block; bottom: 44vh; left: 68%; width: 100px; }
+.game-scene.level-eight .coin-one { bottom: 58vh; left: 17%; }
+.game-scene.level-eight .coin-two { bottom: 40vh; left: 50%; }
+.game-scene.level-eight .coin-three { bottom: 54vh; right: 14%; }
+.game-scene.level-eight .coin-four { bottom: 31vh; left: 25%; }
+.game-scene.level-eight .coin-five { bottom: 50vh; right: 23%; }
+
+.game-scene.level-nine .platform-one { bottom: 28vh; left: 8%; }
+.game-scene.level-nine .platform-two { bottom: 48vh; left: 30%; }
+.game-scene.level-nine .platform-three { bottom: 30vh; right: 8%; }
+.game-scene.level-nine .platform-four { display: block; bottom: 48vh; left: 53%; }
+.game-scene.level-nine .platform-five { display: block; bottom: 54vh; right: 28%; width: 105px; }
+.game-scene.level-nine .coin-one { bottom: 34vh; left: 14%; }
+.game-scene.level-nine .coin-two { bottom: 56vh; left: 38%; }
+.game-scene.level-nine .coin-three { bottom: 56vh; left: 59%; }
+.game-scene.level-nine .coin-four { bottom: 62vh; right: 32%; }
+.game-scene.level-nine .coin-five { bottom: 36vh; right: 14%; }
+
+.game-scene.level-ten .platform-one { bottom: 40vh; left: 5%; }
+.game-scene.level-ten .platform-two { bottom: 48vh; left: 28%; }
+.game-scene.level-ten .platform-three { bottom: 44vh; left: 58%; }
+.game-scene.level-ten .platform-four { display: block; bottom: 50vh; right: 5%; width: 125px; }
+.game-scene.level-ten .platform-five { display: block; bottom: 28vh; left: 42%; width: 105px; }
+.game-scene.level-ten .coin-one { bottom: 46vh; left: 12%; }
+.game-scene.level-ten .coin-two { bottom: 56vh; left: 35%; }
+.game-scene.level-ten .coin-three { bottom: 52vh; left: 64%; }
+.game-scene.level-ten .coin-four { bottom: 36vh; left: 48%; }
+.game-scene.level-ten .coin-five { bottom: 58vh; right: 11%; }
+
+.game-scene.level-eleven .platform-one { bottom: 34vh; left: 3%; }
+.game-scene.level-eleven .platform-two { bottom: 47vh; left: 25%; }
+.game-scene.level-eleven .platform-three { bottom: 36vh; left: 58%; }
+.game-scene.level-eleven .platform-four { display: block; bottom: 53vh; right: 5%; width: 115px; }
+.game-scene.level-eleven .platform-five { display: block; bottom: 27vh; left: 42%; width: 95px; }
+.game-scene.level-eleven .coin-one { bottom: 40vh; left: 10%; }
+.game-scene.level-eleven .coin-two { bottom: 55vh; left: 32%; }
+.game-scene.level-eleven .coin-three { bottom: 44vh; left: 66%; }
+.game-scene.level-eleven .coin-four { bottom: 61vh; right: 12%; }
+.game-scene.level-eleven .coin-five { bottom: 34vh; left: 47%; }
+
+.game-scene.level-twelve .platform-one { bottom: 43vh; left: 7%; }
+.game-scene.level-twelve .platform-two { bottom: 29vh; left: 34%; }
+.game-scene.level-twelve .platform-three { bottom: 49vh; right: 5%; }
+.game-scene.level-twelve .platform-four { display: block; bottom: 58vh; left: 48%; width: 105px; }
+.game-scene.level-twelve .platform-five { display: block; bottom: 36vh; right: 26%; width: 90px; }
+.game-scene.level-twelve .coin-one { bottom: 49vh; left: 14%; }
+.game-scene.level-twelve .coin-two { bottom: 36vh; left: 42%; }
+.game-scene.level-twelve .coin-three { bottom: 64vh; left: 54%; }
+.game-scene.level-twelve .coin-four { bottom: 56vh; right: 13%; }
+.game-scene.level-twelve .coin-five { bottom: 43vh; right: 31%; }
+
+.game-scene.level-thirteen .platform-one { bottom: 30vh; left: 5%; }
+.game-scene.level-thirteen .platform-two { bottom: 51vh; left: 22%; }
+.game-scene.level-thirteen .platform-three { bottom: 39vh; left: 53%; }
+.game-scene.level-thirteen .platform-four { display: block; bottom: 56vh; right: 4%; width: 120px; }
+.game-scene.level-thirteen .platform-five { display: block; bottom: 33vh; left: 38%; width: 90px; }
+.game-scene.level-thirteen .platform-six { display: block; bottom: 45vh; left: 72%; width: 80px; }
+.game-scene.level-thirteen .coin-one { bottom: 36vh; left: 12%; }
+.game-scene.level-thirteen .coin-two { bottom: 59vh; left: 29%; }
+.game-scene.level-thirteen .coin-three { bottom: 47vh; left: 61%; }
+.game-scene.level-thirteen .coin-four { bottom: 63vh; right: 13%; }
+.game-scene.level-thirteen .coin-five { bottom: 39vh; left: 43%; }
+
+.game-scene.level-fourteen .platform-one { bottom: 46vh; left: 4%; }
+.game-scene.level-fourteen .platform-two { bottom: 35vh; left: 30%; }
+.game-scene.level-fourteen .platform-three { bottom: 54vh; right: 7%; }
+.game-scene.level-fourteen .platform-four { display: block; bottom: 65vh; left: 52%; width: 105px; }
+.game-scene.level-fourteen .platform-five { display: block; bottom: 42vh; right: 27%; width: 90px; }
+.game-scene.level-fourteen .coin-one { bottom: 52vh; left: 11%; }
+.game-scene.level-fourteen .coin-two { bottom: 42vh; left: 37%; }
+.game-scene.level-fourteen .coin-three { bottom: 71vh; left: 58%; }
+.game-scene.level-fourteen .coin-four { bottom: 61vh; right: 32%; }
+.game-scene.level-fourteen .coin-five { bottom: 60vh; right: 12%; }
+
+.game-scene.level-fifteen .platform-one { bottom: 37vh; left: 3%; }
+.game-scene.level-fifteen .platform-two { bottom: 54vh; left: 23%; }
+.game-scene.level-fifteen .platform-three { bottom: 43vh; left: 55%; }
+.game-scene.level-fifteen .platform-four { display: block; bottom: 67vh; right: 4%; width: 120px; }
+.game-scene.level-fifteen .platform-five { display: block; bottom: 31vh; left: 40%; width: 95px; }
+.game-scene.level-fifteen .platform-six { display: block; bottom: 49vh; left: 73%; width: 80px; }
+.game-scene.level-fifteen .coin-one { bottom: 44vh; left: 10%; }
+.game-scene.level-fifteen .coin-two { bottom: 62vh; left: 31%; }
+.game-scene.level-fifteen .coin-three { bottom: 51vh; left: 64%; }
+.game-scene.level-fifteen .coin-four { bottom: 69vh; right: 13%; }
+.game-scene.level-fifteen .coin-five { bottom: 37vh; left: 45%; }
+
+.moving-platform { display: none; }
+.game-scene.level-sixteen .ground {
+  right: 0;
+  left: 50%;
+  width: 50%;
+}
+.game-scene.level-sixteen .moving-platform {
+  display: block;
+  bottom: 30vh;
+  left: 42%;
+  width: 130px;
+  animation: platform-shuttle 5s ease-in-out infinite alternate;
+}
+.game-scene.level-sixteen .platform-one,
+.game-scene.level-sixteen .platform-two,
+.game-scene.level-sixteen .platform-three,
+.game-scene.level-sixteen .platform-four,
+.game-scene.level-sixteen .platform-five,
+.game-scene.level-sixteen .platform-six,
+.game-scene.level-sixteen .platform-seven,
+.game-scene.level-sixteen .platform-eight { display: none; }
+
+@keyframes platform-shuttle {
+  from { transform: translateX(-38vw); }
+  to { transform: translateX(30vw); }
+}
+
+/* Levels 17–25 use the same gap challenge with varied timing and heights. */
+.game-scene.level-seventeen .ground,
+.game-scene.level-eighteen .ground,
+.game-scene.level-nineteen .ground,
+.game-scene.level-twenty .ground,
+.game-scene.level-twenty-one .ground,
+.game-scene.level-twenty-two .ground,
+.game-scene.level-twenty-three .ground,
+.game-scene.level-twenty-four .ground,
+.game-scene.level-twenty-five .ground { right: 0; left: 50%; width: 50%; }
+
+.game-scene.level-seventeen .moving-platform,
+.game-scene.level-eighteen .moving-platform,
+.game-scene.level-nineteen .moving-platform,
+.game-scene.level-twenty .moving-platform,
+.game-scene.level-twenty-one .moving-platform,
+.game-scene.level-twenty-two .moving-platform,
+.game-scene.level-twenty-three .moving-platform,
+.game-scene.level-twenty-four .moving-platform,
+.game-scene.level-twenty-five .moving-platform { display: block; left: 42%; width: 130px; }
+
+.game-scene.level-seventeen .platform:not(.moving-platform),
+.game-scene.level-eighteen .platform:not(.moving-platform),
+.game-scene.level-nineteen .platform:not(.moving-platform),
+.game-scene.level-twenty .platform:not(.moving-platform),
+.game-scene.level-twenty-one .platform:not(.moving-platform),
+.game-scene.level-twenty-two .platform:not(.moving-platform),
+.game-scene.level-twenty-three .platform:not(.moving-platform),
+.game-scene.level-twenty-four .platform:not(.moving-platform),
+.game-scene.level-twenty-five .platform:not(.moving-platform) { display: none; }
+
+.game-scene.level-seventeen .moving-platform { bottom: 25vh; animation-duration: 4.8s; }
+.game-scene.level-eighteen .moving-platform { bottom: 34vh; animation-duration: 5.4s; }
+.game-scene.level-nineteen .moving-platform { bottom: 29vh; animation-duration: 4.2s; }
+.game-scene.level-twenty .moving-platform { bottom: 40vh; animation-duration: 6s; }
+.game-scene.level-twenty-one .moving-platform { bottom: 27vh; animation-duration: 3.8s; }
+.game-scene.level-twenty-two .moving-platform { bottom: 36vh; animation-duration: 5.8s; }
+.game-scene.level-twenty-three .moving-platform { bottom: 31vh; animation-duration: 4.5s; }
+.game-scene.level-twenty-four .moving-platform { bottom: 43vh; animation-duration: 6.4s; }
+.game-scene.level-twenty-five .moving-platform { bottom: 33vh; animation-duration: 3.5s; }
+
+/* Distinct gap widths and platform positions for each challenge. */
+.game-scene.level-seventeen .ground { left: 58%; width: 42%; }
+.game-scene.level-seventeen .moving-platform { left: 34%; width: 105px; }
+.game-scene.level-eighteen .ground { left: 44%; width: 56%; }
+.game-scene.level-eighteen .moving-platform { left: 50%; width: 145px; }
+.game-scene.level-nineteen .ground { left: 62%; width: 38%; }
+.game-scene.level-nineteen .moving-platform { left: 27%; width: 125px; }
+.game-scene.level-twenty .ground { left: 48%; width: 52%; }
+.game-scene.level-twenty .moving-platform { left: 57%; width: 100px; }
+.game-scene.level-twenty-one .ground { left: 55%; width: 45%; }
+.game-scene.level-twenty-one .moving-platform { left: 20%; width: 155px; }
+.game-scene.level-twenty-two .ground { left: 40%; width: 60%; }
+.game-scene.level-twenty-two .moving-platform { left: 46%; width: 115px; }
+.game-scene.level-twenty-three .ground { left: 65%; width: 35%; }
+.game-scene.level-twenty-three .moving-platform { left: 31%; width: 135px; }
+.game-scene.level-twenty-four .ground { left: 47%; width: 53%; }
+.game-scene.level-twenty-four .moving-platform { left: 61%; width: 90px; }
+.game-scene.level-twenty-five .ground { left: 57%; width: 43%; }
+.game-scene.level-twenty-five .moving-platform { left: 25%; width: 160px; }
+
+.game-scene.level-seventeen .coin-one { left: 18%; bottom: 24vh; }
+.game-scene.level-seventeen .coin-two { left: 38%; bottom: 47vh; }
+.game-scene.level-eighteen .coin-one { left: 8%; bottom: 39vh; }
+.game-scene.level-eighteen .coin-three { right: 30%; bottom: 53vh; }
+.game-scene.level-nineteen .coin-two { left: 28%; bottom: 32vh; }
+.game-scene.level-nineteen .coin-four { right: 8%; bottom: 42vh; }
+.game-scene.level-twenty .coin-one { left: 22%; bottom: 29vh; }
+.game-scene.level-twenty .coin-five { right: 7%; bottom: 51vh; }
+.game-scene.level-twenty-one .coin-two { left: 17%; bottom: 58vh; }
+.game-scene.level-twenty-one .coin-four { right: 22%; bottom: 28vh; }
+.game-scene.level-twenty-two .coin-one { left: 5%; bottom: 46vh; }
+.game-scene.level-twenty-two .coin-three { left: 73%; bottom: 39vh; }
+.game-scene.level-twenty-three .coin-two { left: 44%; bottom: 53vh; }
+.game-scene.level-twenty-three .coin-five { right: 6%; bottom: 26vh; }
+.game-scene.level-twenty-four .coin-one { left: 13%; bottom: 55vh; }
+.game-scene.level-twenty-four .coin-four { right: 39%; bottom: 35vh; }
+.game-scene.level-twenty-five .coin-two { left: 25%; bottom: 41vh; }
+.game-scene.level-twenty-five .coin-three { left: 70%; bottom: 58vh; }
+
+/* Keep the start and finish reliably grounded on every moving-platform level. */
+.game-scene.level-seventeen .ground,
+.game-scene.level-eighteen .ground,
+.game-scene.level-nineteen .ground,
+.game-scene.level-twenty .ground,
+.game-scene.level-twenty-one .ground,
+.game-scene.level-twenty-two .ground,
+.game-scene.level-twenty-three .ground,
+.game-scene.level-twenty-four .ground,
+.game-scene.level-twenty-five .ground { left: 50% !important; width: 50% !important; }
+
+.game-scene.level-seventeen .moving-platform,
+.game-scene.level-eighteen .moving-platform,
+.game-scene.level-nineteen .moving-platform,
+.game-scene.level-twenty .moving-platform,
+.game-scene.level-twenty-one .moving-platform,
+.game-scene.level-twenty-two .moving-platform,
+.game-scene.level-twenty-three .moving-platform,
+.game-scene.level-twenty-four .moving-platform,
+.game-scene.level-twenty-five .moving-platform { left: 42% !important; }
+
+/* Level 17 has two ground islands with the gap centered between them. */
+.game-scene.level-seventeen .ground:not(.ground-left) { left: 65% !important; width: 35% !important; }
+.game-scene.level-seventeen .ground-left { right: auto; left: 0 !important; width: 30% !important; }
+
+/* Levels 18–25 return to regular full-ground platforming. */
+.game-scene.level-eighteen .ground,
+.game-scene.level-nineteen .ground,
+.game-scene.level-twenty .ground,
+.game-scene.level-twenty-one .ground,
+.game-scene.level-twenty-two .ground,
+.game-scene.level-twenty-three .ground,
+.game-scene.level-twenty-four .ground,
+.game-scene.level-twenty-five .ground {
+  left: 0 !important;
+  width: 100% !important;
+}
+
+.game-scene.level-eighteen .moving-platform,
+.game-scene.level-nineteen .moving-platform,
+.game-scene.level-twenty .moving-platform,
+.game-scene.level-twenty-one .moving-platform,
+.game-scene.level-twenty-two .moving-platform,
+.game-scene.level-twenty-three .moving-platform,
+.game-scene.level-twenty-four .moving-platform,
+.game-scene.level-twenty-five .moving-platform { display: none; }
+
+.game-scene.level-eighteen .platform:not(.moving-platform),
+.game-scene.level-nineteen .platform:not(.moving-platform),
+.game-scene.level-twenty .platform:not(.moving-platform),
+.game-scene.level-twenty-one .platform:not(.moving-platform),
+.game-scene.level-twenty-two .platform:not(.moving-platform),
+.game-scene.level-twenty-three .platform:not(.moving-platform),
+.game-scene.level-twenty-four .platform:not(.moving-platform),
+.game-scene.level-twenty-five .platform:not(.moving-platform) { display: block; }
+
+.game-scene.level-eighteen .platform-four,
+.game-scene.level-eighteen .platform-five,
+.game-scene.level-eighteen .platform-six,
+.game-scene.level-eighteen .platform-seven,
+.game-scene.level-eighteen .platform-eight,
+.game-scene.level-nineteen .platform-four,
+.game-scene.level-nineteen .platform-five,
+.game-scene.level-nineteen .platform-six,
+.game-scene.level-nineteen .platform-seven,
+.game-scene.level-nineteen .platform-eight,
+.game-scene.level-twenty .platform-four,
+.game-scene.level-twenty .platform-five,
+.game-scene.level-twenty .platform-six,
+.game-scene.level-twenty .platform-seven,
+.game-scene.level-twenty .platform-eight,
+.game-scene.level-twenty-one .platform-four,
+.game-scene.level-twenty-one .platform-five,
+.game-scene.level-twenty-one .platform-six,
+.game-scene.level-twenty-one .platform-seven,
+.game-scene.level-twenty-one .platform-eight,
+.game-scene.level-twenty-two .platform-four,
+.game-scene.level-twenty-two .platform-five,
+.game-scene.level-twenty-two .platform-six,
+.game-scene.level-twenty-two .platform-seven,
+.game-scene.level-twenty-two .platform-eight,
+.game-scene.level-twenty-three .platform-four,
+.game-scene.level-twenty-three .platform-five,
+.game-scene.level-twenty-three .platform-six,
+.game-scene.level-twenty-three .platform-seven,
+.game-scene.level-twenty-three .platform-eight,
+.game-scene.level-twenty-four .platform-four,
+.game-scene.level-twenty-four .platform-five,
+.game-scene.level-twenty-four .platform-six,
+.game-scene.level-twenty-four .platform-seven,
+.game-scene.level-twenty-four .platform-eight,
+.game-scene.level-twenty-five .platform-four,
+.game-scene.level-twenty-five .platform-five,
+.game-scene.level-twenty-five .platform-six,
+.game-scene.level-twenty-five .platform-seven,
+.game-scene.level-twenty-five .platform-eight { display: none; }
+
+.game-scene.level-seventeen .moving-platform,
+.game-scene.level-nineteen .moving-platform,
+.game-scene.level-twenty-one .moving-platform,
+.game-scene.level-twenty-three .moving-platform,
+.game-scene.level-twenty-five .moving-platform { animation-name: platform-shuttle-wide; }
+
+@keyframes platform-shuttle-wide {
+  from { transform: translateX(-45vw); }
+  to { transform: translateX(31vw); }
+}
 
 .hero {
   position: absolute;
@@ -661,6 +1126,7 @@ button {
 }
 
 .score,
+.level-indicator,
 #shop-button,
 .shop-panel,
 .win-card,
