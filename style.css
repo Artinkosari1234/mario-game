@@ -382,6 +382,11 @@ body {
 .coin-three { bottom: 55vh; left: 68%; }
 .coin-four { bottom: 29vh; right: 25%; }
 .coin-five { bottom: 22vh; right: 8%; }
+.coin-six { bottom: 38vh; left: 34%; }
+.coin-seven { bottom: 52vh; left: 52%; }
+.coin-eight { bottom: 64vh; left: 68%; }
+.coin-nine { bottom: 48vh; right: 14%; }
+.coin-ten { bottom: 30vh; right: 4%; }
 
 .flag {
   position: absolute;
@@ -828,6 +833,9 @@ body {
 .game-scene.level-fifteen .coin-five { bottom: 37vh; left: 45%; }
 
 .moving-platform { display: none; }
+.platform-nine { display: none; }
+.platform-ten,
+.platform-eleven { display: none; }
 .game-scene.level-sixteen .ground {
   right: 0;
   left: 50%;
@@ -1042,6 +1050,54 @@ body {
   to { transform: translateX(31vw); }
 }
 
+/* Level 26: three platforms rise and fall continuously. */
+.game-scene.level-twenty-six .platform-one,
+.game-scene.level-twenty-six .platform-two,
+.game-scene.level-twenty-six .platform-three {
+  display: block;
+  bottom: 25vh;
+}
+
+.game-scene.level-twenty-six .platform-one {
+  left: 16%;
+  width: 115px;
+  animation: platform-rise-fall-one 3.8s ease-in-out infinite alternate;
+}
+
+.game-scene.level-twenty-six .platform-two {
+  left: 43%;
+  width: 125px;
+  animation: platform-rise-fall-two 4.6s ease-in-out infinite alternate;
+}
+
+.game-scene.level-twenty-six .platform-three {
+  right: 12%;
+  width: 110px;
+  animation: platform-rise-fall-three 5.2s ease-in-out infinite alternate;
+}
+
+.game-scene.level-twenty-six .platform-four,
+.game-scene.level-twenty-six .platform-five,
+.game-scene.level-twenty-six .platform-six,
+.game-scene.level-twenty-six .platform-seven,
+.game-scene.level-twenty-six .platform-eight,
+.game-scene.level-twenty-six .moving-platform { display: none; }
+
+@keyframes platform-rise-fall-one {
+  from { transform: translateY(0); }
+  to { transform: translateY(-30vh); }
+}
+
+@keyframes platform-rise-fall-two {
+  from { transform: translateY(-10vh); }
+  to { transform: translateY(-38vh); }
+}
+
+@keyframes platform-rise-fall-three {
+  from { transform: translateY(-3vh); }
+  to { transform: translateY(-32vh); }
+}
+
 .hero {
   position: absolute;
   z-index: 3;
@@ -1180,3 +1236,203 @@ button {
 .shop-panel h2 {
   letter-spacing: 1px;
 }
+
+.secret-level,
+.level-picker {
+  display: block;
+  margin-top: 10px;
+}
+
+.secret-code,
+.level-picker select {
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 5px;
+  padding: 6px;
+  border: 2px solid #35135c;
+  background: #fff7d6;
+  color: #35135c;
+  font: 700 14px "Courier New", monospace;
+}
+
+/* Level 27's reward box gives the hero visible white wings. */
+.mystery-box {
+  display: none;
+  position: absolute;
+  z-index: 3;
+  bottom: 34vh;
+  left: 48%;
+  width: 34px;
+  height: 34px;
+  border: 4px solid #6b3d20;
+  color: #fff7b2;
+  background: #e9a928;
+  box-shadow: inset 4px 4px 0 #ffd85a, 4px 4px 0 rgba(47, 25, 16, 0.45);
+  font: 700 26px/29px "Courier New", monospace;
+  text-align: center;
+}
+
+.game-scene.level-twenty-seven .mystery-box { display: block; }
+
+.game-scene.level-twenty-seven .ground {
+  right: auto;
+  left: 0;
+  width: 10%;
+}
+
+.game-scene.level-twenty-seven .ground-left {
+  right: 0;
+  left: auto;
+  display: block;
+  width: 10%;
+}
+
+.game-scene.level-twenty-seven .mystery-box {
+  bottom: 27vh;
+  left: 5%;
+}
+
+.game-scene.level-twenty-seven .platform-one { left: 18%; bottom: 31vh; }
+.game-scene.level-twenty-seven .platform-two { left: 43%; bottom: 47vh; }
+.game-scene.level-twenty-seven .platform-three { right: 12%; bottom: 35vh; }
+.game-scene.level-twenty-seven .platform-one,
+.game-scene.level-twenty-seven .platform-two,
+.game-scene.level-twenty-seven .platform-three,
+.game-scene.level-twenty-seven .platform-four,
+.game-scene.level-twenty-seven .platform-five,
+.game-scene.level-twenty-seven .platform-six,
+.game-scene.level-twenty-seven .platform-seven,
+.game-scene.level-twenty-seven .platform-eight,
+.game-scene.level-twenty-seven .moving-platform { display: none; }
+
+.hero.has-wings::before {
+  position: absolute;
+  top: 14px;
+  width: 23px;
+  height: 26px;
+  border: 3px solid #b9c6d8;
+  background: #fff;
+  content: "";
+}
+
+.hero.has-wings::before { left: -22px; transform: skewY(22deg); }
+.hero.has-wings::after { display: none; }
+
+/* Level 28: cross the same gap with five moving platforms. */
+.game-scene.level-twenty-eight .ground {
+  right: auto;
+  left: 0;
+  width: 10%;
+}
+
+.game-scene.level-twenty-eight .ground-left {
+  right: 0;
+  left: auto;
+  display: block;
+  width: 10%;
+}
+
+.game-scene.level-twenty-eight .platform-one,
+.game-scene.level-twenty-eight .platform-two,
+.game-scene.level-twenty-eight .platform-three,
+.game-scene.level-twenty-eight .platform-four,
+.game-scene.level-twenty-eight .platform-five {
+  display: block;
+  width: 105px;
+}
+
+.game-scene.level-twenty-eight .platform-one { left: 16%; bottom: 25vh; animation: level28-platform-one 3.8s ease-in-out infinite alternate; }
+.game-scene.level-twenty-eight .platform-two { left: 32%; bottom: 38vh; animation: level28-platform-two 4.4s ease-in-out infinite alternate; }
+.game-scene.level-twenty-eight .platform-three { left: 48%; bottom: 28vh; animation: level28-platform-three 4.9s ease-in-out infinite alternate; }
+.game-scene.level-twenty-eight .platform-four { left: 64%; bottom: 42vh; animation: level28-platform-four 5.3s ease-in-out infinite alternate; }
+.game-scene.level-twenty-eight .platform-five { left: 78%; bottom: 26vh; animation: level28-platform-five 4.1s ease-in-out infinite alternate; }
+
+.game-scene.level-twenty-eight .platform-six,
+.game-scene.level-twenty-eight .platform-seven,
+.game-scene.level-twenty-eight .platform-eight,
+.game-scene.level-twenty-eight .moving-platform { display: none; }
+.game-scene.level-twenty-eight .coin-four { display: none; }
+
+@keyframes level28-platform-one { from { transform: translateY(0); } to { transform: translateY(-16vh); } }
+@keyframes level28-platform-two { from { transform: translateY(-8vh); } to { transform: translateY(-30vh); } }
+@keyframes level28-platform-three { from { transform: translateY(0); } to { transform: translateY(-20vh); } }
+@keyframes level28-platform-four { from { transform: translateY(-12vh); } to { transform: translateY(-34vh); } }
+@keyframes level28-platform-five { from { transform: translateY(0); } to { transform: translateY(-18vh); } }
+
+/* Levels 29 and 30: ten-step platform courses. */
+.game-scene.level-twenty-nine .platform-one,
+.game-scene.level-twenty-nine .platform-two,
+.game-scene.level-twenty-nine .platform-three,
+.game-scene.level-twenty-nine .platform-four,
+.game-scene.level-twenty-nine .platform-five,
+.game-scene.level-twenty-nine .platform-six,
+.game-scene.level-twenty-nine .platform-seven,
+.game-scene.level-twenty-nine .platform-eight,
+.game-scene.level-twenty-nine .platform-nine,
+.game-scene.level-twenty-nine .moving-platform {
+  display: block;
+  width: 95px;
+}
+
+.game-scene.level-twenty-nine .platform-one { left: 6%; bottom: 22vh; }
+.game-scene.level-twenty-nine .platform-two { left: 15%; bottom: 28vh; }
+.game-scene.level-twenty-nine .platform-three { left: 24%; bottom: 34vh; }
+.game-scene.level-twenty-nine .platform-four { left: 33%; bottom: 40vh; }
+.game-scene.level-twenty-nine .platform-five { left: 42%; bottom: 46vh; }
+.game-scene.level-twenty-nine .platform-six { left: 51%; bottom: 52vh; }
+.game-scene.level-twenty-nine .platform-seven { left: 60%; bottom: 58vh; }
+.game-scene.level-twenty-nine .platform-eight { left: 69%; bottom: 64vh; }
+.game-scene.level-twenty-nine .platform-nine { left: 78%; bottom: 70vh; }
+.game-scene.level-twenty-nine .moving-platform { left: 87%; bottom: 76vh; }
+
+.game-scene.level-thirty .ground {
+  right: auto;
+  left: 0;
+  width: 10%;
+}
+
+.game-scene.level-thirty .ground-left {
+  right: 0;
+  left: auto;
+  display: block;
+  width: 10%;
+}
+
+.game-scene.level-thirty .platform-one,
+.game-scene.level-thirty .platform-two,
+.game-scene.level-thirty .platform-three,
+.game-scene.level-thirty .platform-four,
+.game-scene.level-thirty .platform-five {
+  display: block;
+  width: 105px;
+}
+
+.game-scene.level-thirty .platform-six,
+.game-scene.level-thirty .platform-seven,
+.game-scene.level-thirty .platform-eight,
+.game-scene.level-thirty .platform-nine,
+.game-scene.level-thirty .platform-ten,
+.game-scene.level-thirty .platform-eleven,
+.game-scene.level-thirty .moving-platform {
+  display: block;
+  width: 95px;
+}
+
+.game-scene.level-thirty .platform-one { left: 15%; bottom: 25vh; animation: level30-platform-one 4s ease-in-out infinite alternate; }
+.game-scene.level-thirty .platform-two { left: 32%; bottom: 40vh; animation: level30-platform-two 4.7s ease-in-out infinite alternate; }
+.game-scene.level-thirty .platform-three { left: 49%; bottom: 28vh; animation: level30-platform-three 5.4s ease-in-out infinite alternate; }
+.game-scene.level-thirty .platform-four { left: 66%; bottom: 43vh; animation: level30-platform-four 4.5s ease-in-out infinite alternate; }
+.game-scene.level-thirty .platform-five { left: 80%; bottom: 27vh; animation: level30-platform-five 5.1s ease-in-out infinite alternate; }
+.game-scene.level-thirty .platform-six { left: 51%; bottom: 52vh; animation: level30-platform-two 4.8s ease-in-out infinite alternate; }
+.game-scene.level-thirty .platform-seven { left: 60%; bottom: 58vh; animation: level30-platform-three 5.2s ease-in-out infinite alternate; }
+.game-scene.level-thirty .platform-eight { left: 69%; bottom: 64vh; animation: level30-platform-four 4.6s ease-in-out infinite alternate; }
+.game-scene.level-thirty .platform-nine { left: 78%; bottom: 70vh; animation: level30-platform-five 5s ease-in-out infinite alternate; }
+.game-scene.level-thirty .platform-ten { left: 85%; bottom: 76vh; animation: level30-platform-two 4.7s ease-in-out infinite alternate; }
+.game-scene.level-thirty .platform-eleven { left: 91%; bottom: 82vh; animation: level30-platform-three 5.3s ease-in-out infinite alternate; }
+.game-scene.level-thirty .moving-platform { left: 97%; bottom: 88vh; animation: level30-platform-one 4.3s ease-in-out infinite alternate; }
+
+@keyframes level30-platform-one { from { transform: translateY(0); } to { transform: translateY(-18vh); } }
+@keyframes level30-platform-two { from { transform: translateY(-7vh); } to { transform: translateY(-30vh); } }
+@keyframes level30-platform-three { from { transform: translateY(0); } to { transform: translateY(-22vh); } }
+@keyframes level30-platform-four { from { transform: translateY(-10vh); } to { transform: translateY(-34vh); } }
+@keyframes level30-platform-five { from { transform: translateY(0); } to { transform: translateY(-20vh); } }

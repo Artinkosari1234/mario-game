@@ -3,6 +3,7 @@ const hero = document.querySelector('.hero');
 const ground = document.querySelector('.ground');
 const platforms = [...document.querySelectorAll('.platform')];
 const coins = [...document.querySelectorAll('.coin')];
+const mysteryBox = document.querySelector('.mystery-box');
 const scoreElement = document.querySelector('#score');
 const levelIndicator = document.querySelector('#level-indicator');
 const flag = document.querySelector('.flag');
@@ -18,6 +19,9 @@ const touchButtons = [...document.querySelectorAll('.touch-button')];
 const settingsButton = document.querySelector('#settings-button');
 const settingsPanel = document.querySelector('#settings-panel');
 const touchToggle = document.querySelector('#touch-toggle');
+const secretCode = document.querySelector('#secret-code');
+const levelPicker = document.querySelector('#level-picker');
+const levelSelect = document.querySelector('#level-select');
 
 const speed = 6;
 const jumpStrength = 16;
@@ -31,6 +35,15 @@ let score = 0;
 let totalCoins = 0;
 let won = false;
 let level = 1;
+let ridingPlatform = null;
+let previousPlatformTop = null;
+let hasWings = false;
+
+function resetCoinsForLevel() {
+  coins.forEach((coin) => {
+    coin.hidden = coin.classList.contains('coin-six') || coin.classList.contains('coin-seven') || coin.classList.contains('coin-eight') || coin.classList.contains('coin-nine') || coin.classList.contains('coin-ten') ? level !== 30 : false;
+  });
+}
 
 function updateLevelIndicator() {
   levelIndicator.textContent = `Level ${level}`;
@@ -55,15 +68,22 @@ function moveHero() {
   if (isGrounded && heroY > 0) {
     const groundTop = scene.clientHeight - ground.offsetHeight;
     const heroBottom = groundTop - heroY;
-    const standingOnPlatform = platforms.some((platform) => {
+    const standingPlatform = platforms.find((platform) => {
       const platformRect = platform.getBoundingClientRect();
       const platformTop = platformRect.top - scene.getBoundingClientRect().top;
       const overlapsHorizontally = heroX + hero.offsetWidth > platformRect.left - scene.getBoundingClientRect().left && heroX < platformRect.right - scene.getBoundingClientRect().left;
-      return Math.abs(heroBottom - platformTop) < 1 && overlapsHorizontally;
+      return Math.abs(heroBottom - platformTop) < 4 && overlapsHorizontally;
     });
 
-    if (!standingOnPlatform) {
+    if (!standingPlatform) {
+      ridingPlatform = null;
+      previousPlatformTop = null;
       isGrounded = false;
+    } else {
+      const platformTop = standingPlatform.getBoundingClientRect().top - scene.getBoundingClientRect().top;
+      if (ridingPlatform === standingPlatform && previousPlatformTop !== null) heroY += previousPlatformTop - platformTop;
+      ridingPlatform = standingPlatform;
+      previousPlatformTop = platformTop;
     }
   }
 
@@ -76,11 +96,14 @@ function moveHero() {
       heroY = 0;
       verticalVelocity = 0;
       isGrounded = true;
+      ridingPlatform = null;
+      previousPlatformTop = null;
 
       const heroRight = heroX + hero.offsetWidth;
       const inLevelSeventeenGap = level === 17 && heroX >= scene.clientWidth * 0.30 && heroRight <= scene.clientWidth * 0.65;
       const offRightGround = level === 16 && heroRight < scene.clientWidth / 2;
-      if (inLevelSeventeenGap || offRightGround) {
+      const inLevelTwentySevenGap = (level === 27 || level === 28 || level === 30) && heroX + hero.offsetWidth / 2 > scene.clientWidth * 0.10 && heroX + hero.offsetWidth / 2 < scene.clientWidth * 0.90;
+      if (inLevelSeventeenGap || offRightGround || inLevelTwentySevenGap) {
         showDeathScreen();
         return;
       }
@@ -105,6 +128,8 @@ function moveHero() {
           heroY = groundTop - platformTop;
           verticalVelocity = 0;
           isGrounded = true;
+          ridingPlatform = platform;
+          previousPlatformTop = platformTop;
           break;
         }
       }
@@ -140,11 +165,20 @@ function moveHero() {
     }
   }
 
+  if (level === 27 && !mysteryBox.hidden) {
+    const boxRect = mysteryBox.getBoundingClientRect();
+    if (heroRect.left < boxRect.right && heroRect.right > boxRect.left && heroRect.top < boxRect.bottom && heroRect.bottom > boxRect.top) {
+      mysteryBox.hidden = true;
+      hasWings = true;
+      hero.classList.add('has-wings');
+    }
+  }
+
   const flagRect = flag.getBoundingClientRect();
-  if (allCoinsCollected && heroRect.right > flagRect.left && heroRect.left < flagRect.right && heroRect.bottom > flagRect.top && heroRect.top < flagRect.bottom) {
+  if (allCoinsCollected && (level !== 27 || hasWings) && heroRect.right > flagRect.left && heroRect.left < flagRect.right && heroRect.bottom > flagRect.top && heroRect.top < flagRect.bottom) {
     won = true;
     hero.hidden = true;
-    nextLevel.hidden = level >= 25;
+    nextLevel.hidden = level >= 30;
     winScreen.hidden = false;
   }
 
@@ -157,10 +191,12 @@ window.addEventListener('keydown', (event) => {
     keys.add(event.key);
   }
 
-  if (event.code === 'Space' && isGrounded) {
+  if (event.code === 'Space' && (isGrounded || (level === 27 && hasWings))) {
     event.preventDefault();
     verticalVelocity = jumpStrength;
     isGrounded = false;
+    ridingPlatform = null;
+    previousPlatformTop = null;
   }
 });
 
@@ -182,9 +218,11 @@ touchButtons.forEach((button) => {
       isGrounded = false;
     }
     if (control === 'Space') {
-      if (isGrounded && !won) {
+      if ((isGrounded || (level === 27 && hasWings)) && !won) {
         verticalVelocity = jumpStrength;
         isGrounded = false;
+        ridingPlatform = null;
+        previousPlatformTop = null;
       }
       return;
     }
@@ -215,12 +253,15 @@ playAgain.addEventListener('click', () => {
   }
   won = false;
   heroX = scene.clientWidth / 2 - hero.offsetWidth / 2;
+  if (level === 27 || level === 28 || level === 30) heroX = scene.clientWidth * 0.05;
   heroY = 0;
   verticalVelocity = 0;
   isGrounded = true;
+  ridingPlatform = null;
+  previousPlatformTop = null;
   score = 0;
   scoreElement.textContent = totalCoins;
-  coins.forEach((coin) => { coin.hidden = false; });
+  resetCoinsForLevel();
   hero.hidden = false;
   winScreen.hidden = true;
   hero.style.left = `${heroX}px`;
@@ -229,19 +270,26 @@ playAgain.addEventListener('click', () => {
 nextLevel.addEventListener('click', () => {
   level += 1;
   updateLevelIndicator();
-  scene.className = scene.className.replace(/\blevel-(?:twenty-five|twenty-four|twenty-three|twenty-two|twenty-one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)\b/g, '');
-  const levelNames = ['', '', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty', 'twenty-one', 'twenty-two', 'twenty-three', 'twenty-four', 'twenty-five'];
+  scene.className = scene.className.replace(/\blevel-(?:twenty-nine|thirty|twenty-eight|twenty-seven|twenty-six|twenty-five|twenty-four|twenty-three|twenty-two|twenty-one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)\b/g, '');
+  const levelNames = ['', '', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty', 'twenty-one', 'twenty-two', 'twenty-three', 'twenty-four', 'twenty-five', 'twenty-six', 'twenty-seven', 'twenty-eight', 'twenty-nine', 'thirty'];
   scene.classList.add(`level-${levelNames[level]}`);
   won = false;
   hero.hidden = false;
   heroX = scene.clientWidth / 2 - hero.offsetWidth / 2;
+  if (level === 27 || level === 28 || level === 30) heroX = scene.clientWidth * 0.05;
   heroY = 0;
   verticalVelocity = 0;
   isGrounded = true;
   score = 0;
-  nextLevel.hidden = level >= 25;
+  nextLevel.hidden = level >= 30;
   scoreElement.textContent = score;
-  coins.forEach((coin) => { coin.hidden = false; });
+  resetCoinsForLevel();
+  mysteryBox.hidden = level !== 27;
+  if (level === 28) {
+    hasWings = false;
+    hero.classList.remove('has-wings');
+  }
+  hero.classList.toggle('has-wings', hasWings);
   winScreen.hidden = true;
   hero.style.left = `${heroX}px`;
   world.style.transform = 'translateX(0)';
@@ -250,17 +298,26 @@ nextLevel.addEventListener('click', () => {
 function restartFromLevelOne() {
   level = 1;
   updateLevelIndicator();
-  scene.classList.remove('level-two', 'level-three', 'level-four', 'level-five', 'level-six', 'level-seven', 'level-eight', 'level-nine', 'level-ten', 'level-eleven', 'level-twelve', 'level-thirteen', 'level-fourteen', 'level-fifteen', 'level-sixteen', 'level-seventeen', 'level-eighteen', 'level-nineteen', 'level-twenty', 'level-twenty-one', 'level-twenty-two', 'level-twenty-three', 'level-twenty-four', 'level-twenty-five');
+  scene.classList.remove('level-two', 'level-three', 'level-four', 'level-five', 'level-six', 'level-seven', 'level-eight', 'level-nine', 'level-ten', 'level-eleven', 'level-twelve', 'level-thirteen', 'level-fourteen', 'level-fifteen', 'level-sixteen', 'level-seventeen', 'level-eighteen', 'level-nineteen', 'level-twenty', 'level-twenty-one', 'level-twenty-two', 'level-twenty-three', 'level-twenty-four', 'level-twenty-five', 'level-twenty-six', 'level-twenty-seven', 'level-twenty-eight', 'level-twenty-nine', 'level-thirty');
   won = false;
   document.querySelector('.win-card h1').textContent = 'YOU WIN!';
   hero.hidden = false;
   heroX = scene.clientWidth / 2 - hero.offsetWidth / 2;
+  if (level === 27 || level === 28 || level === 30) heroX = scene.clientWidth * 0.05;
   heroY = 0;
   verticalVelocity = 0;
   isGrounded = true;
+  ridingPlatform = null;
+  previousPlatformTop = null;
   score = 0;
   scoreElement.textContent = totalCoins;
-  coins.forEach((coin) => { coin.hidden = false; });
+  resetCoinsForLevel();
+  mysteryBox.hidden = true;
+  hasWings = false;
+  hero.classList.remove('has-wings');
+  mysteryBox.hidden = true;
+  hasWings = false;
+  hero.classList.remove('has-wings');
   nextLevel.hidden = false;
   winScreen.hidden = true;
   world.style.transform = 'translateX(0)';
@@ -299,9 +356,39 @@ settingsButton.addEventListener('click', () => {
   settingsButton.setAttribute('aria-expanded', String(!settingsPanel.hidden));
 });
 
+secretCode.addEventListener('input', () => {
+  levelPicker.hidden = secretCode.value !== '1234';
+});
+
+levelSelect.addEventListener('change', () => {
+  level = Number(levelSelect.value);
+  const names = ['', '', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty', 'twenty-one', 'twenty-two', 'twenty-three', 'twenty-four', 'twenty-five', 'twenty-six', 'twenty-seven', 'twenty-eight', 'twenty-nine', 'thirty'];
+  scene.className = scene.className.replace(/\blevel-[a-z-]+\b/g, '');
+  if (level > 1) scene.classList.add(`level-${names[level]}`);
+  updateLevelIndicator();
+  won = false;
+  hero.hidden = false;
+  heroX = scene.clientWidth / 2 - hero.offsetWidth / 2;
+  if (level === 27 || level === 28 || level === 30) heroX = scene.clientWidth * 0.05;
+  heroY = 0;
+  verticalVelocity = 0;
+  isGrounded = true;
+  ridingPlatform = null;
+  previousPlatformTop = null;
+  score = 0;
+  scoreElement.textContent = score;
+  resetCoinsForLevel();
+  mysteryBox.hidden = level !== 27;
+  hasWings = false;
+  hero.classList.remove('has-wings');
+  nextLevel.hidden = level >= 30;
+  winScreen.hidden = true;
+});
+
 touchToggle.addEventListener('change', () => {
   scene.classList.toggle('touch-enabled', touchToggle.checked);
   localStorage.setItem('mario-touch-controls', String(touchToggle.checked));
 });
 
+resetCoinsForLevel();
 moveHero();
